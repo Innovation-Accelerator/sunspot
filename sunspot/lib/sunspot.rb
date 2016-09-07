@@ -250,7 +250,7 @@ module Sunspot
     # http://wiki.apache.org/solr/SolrConfigXml
     #
     def commit(soft_commit = false)
-      session.commit soft_commit
+      session.commit if soft_commit
     end
 
     # Optimizes the index on the singletion session.
