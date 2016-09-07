@@ -1,6 +1,6 @@
 module Sunspot #:nodoc:
   module Rails #:nodoc:
-    # 
+    #
     # This module adds an after_filter to ActionController::Base that commits
     # the Sunspot session if any documents have been added, changed, or removed
     # in the course of the request.
@@ -20,8 +20,10 @@ module Sunspot #:nodoc:
           # this case, since after_filter uses the inheritable_attribute
           # structure, the already-loaded subclasses don't get the filters. So,
           # the below ensures that all loaded controllers have the filter.
+          callback = ::Rails::VERSION::MAJOR > 3 ? :after_action : :after_filter
+
           loaded_controllers.each do |controller|
-            controller.after_filter do
+            controller.send(callback) do
               if Sunspot::Rails.configuration.auto_commit_after_request?
                 Sunspot.commit_if_dirty
               elsif Sunspot::Rails.configuration.auto_commit_after_delete_request?
